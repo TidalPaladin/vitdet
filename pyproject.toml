@@ -3,18 +3,25 @@ requires = ["pdm-pep517>=1.0"]
 build-backend = "pdm.pep517.api"
 
 [project]
-name = "python-template"
+name = "vitdet"
 description = ""
 requires-python = ">=3.8"
 authors = [
     {name = "Scott Chase Waggener", email = "tidalpaladin@protonmail.com"},
 ]
-dependencies = []
+dependencies = [
+  "torch>=2.0",
+  "einops>=0.6.1",
+]
 readme = "README.md"
 license = {text = "Apache"}
 dynamic = ["version"]
 
 [project.optional-dependencies]
+train = [
+  "deep-helpers @ git+https://github.com/TidalPaladin/deep-helpers.git",
+  "ssl-tasks @ git+https://github.com/TidalPaladin/ssl-tasks.git",
+]
 
 [tool.autoflake]
 remove-all-unused-imports = true
