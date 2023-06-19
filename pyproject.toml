@@ -10,8 +10,10 @@ authors = [
     {name = "Scott Chase Waggener", email = "tidalpaladin@protonmail.com"},
 ]
 dependencies = [
-  "torch>=2.0",
-  "einops>=0.6.1",
+    "torch>=2.0",
+    "einops>=0.6.1",
+    "registry @ git+https://github.com/TidalPaladin/callable-registry.git",
+    "numpy>=1.24.3",
 ]
 readme = "README.md"
 license = {text = "Apache"}
@@ -45,8 +47,6 @@ line_length = 119
 lines_after_imports = 2
 multi_line_output = 3
 use_parentheses = false
-
-[tool.pyright]
 
 [tool.pdm]
 version = { source = "scm" }

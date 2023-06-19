@@ -93,6 +93,14 @@ class ViTDet(nn.Module):
             self.transformer.add_module(f"layer{i}", layer)
 
     @property
+    def in_channels(self) -> int:
+        return self.patch_embed.in_channels
+
+    @property
+    def dim(self) -> int:
+        return self.patch_embed.dim
+
+    @property
     def patch_size(self) -> Tuple[int, int]:
         return self.patch_embed.patch_size
 

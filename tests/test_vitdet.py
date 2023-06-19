@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import pytest
 import torch
 from torch import Tensor
 
-from vitdet import ViTDet
+from vitdet import MODEL_REGISTRY, ViTDet
 
 
 class TestViTDet:
@@ -15,3 +16,11 @@ class TestViTDet:
         y = model(x)
         assert isinstance(y, Tensor)
         assert y.shape == (1, 16 * 16, 32)
+
+    @pytest.mark.parametrize("key", MODEL_REGISTRY.available_keys())
+    def test_instantiate_from_registry(self, key):
+        model = MODEL_REGISTRY.get(key).instantiate_with_metadata().fn
+        assert isinstance(model, ViTDet)
+        x = torch.rand(1, model.in_channels, *model.img_size)
+        output = model(x)
+        assert isinstance(output, Tensor)
