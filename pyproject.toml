@@ -21,8 +21,10 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 train = [
-  "deep-helpers @ git+https://github.com/TidalPaladin/deep-helpers.git",
-  "ssl-tasks @ git+https://github.com/TidalPaladin/ssl-tasks.git",
+    "deep-helpers @ git+https://github.com/TidalPaladin/deep-helpers.git",
+    "ssl-tasks @ git+https://github.com/TidalPaladin/ssl-tasks.git",
+    "lightning-bolts>=0.6.0.post1",
+    "wandb>=0.15.4",
 ]
 
 [tool.autoflake]
@@ -74,5 +76,5 @@ markers = [
 filterwarnings = []
 
 # Sample script config
-#[project.scripts]
-#foo = "project.cli.__main__:main"
+[project.scripts]
+train = "deep_helpers.cli:main"

@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from functools import partial
-from typing import List, Tuple, Union
+from typing import Callable, List, Tuple, Union
 
 import torch.nn as nn
 from einops.layers.torch import Rearrange
 from torch import Tensor
+from torch.utils.hooks import RemovableHandle
 
 from .pos_enc import FourierLogspace
 from .stem import PatchEmbed
@@ -121,3 +122,14 @@ class ViTDet(nn.Module):
         # Transformer
         x = self.transformer(x)
         return x
+
+    def register_mask_hook(self, func: Callable, *args, **kwargs) -> RemovableHandle:
+        r"""Register a token masking hook to be applied after the patch embedding step.
+
+        Args:
+            func: Callable token making hook with signature given in :func:`register_forward_hook`
+
+        Returns:
+            A handle that can be used to remove the added hook by calling ``handle.remove()``.
+        """
+        return self.patch_embed.register_forward_hook(func, *args, **kwargs)
