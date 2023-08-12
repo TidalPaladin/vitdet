@@ -14,6 +14,7 @@ dependencies = [
     "einops>=0.6.1",
     "registry @ git+https://github.com/TidalPaladin/callable-registry.git",
     "numpy>=1.24.3",
+    "deepspeed>=0.10.0",
 ]
 readme = "README.md"
 license = {text = "Apache"}
