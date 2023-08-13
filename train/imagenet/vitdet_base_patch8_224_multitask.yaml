@@ -2,7 +2,7 @@ fit:
   trainer:
     accelerator: gpu
     devices: 2
-    strategy: "ddp"
+    strategy: "ddp_find_unused_parameters_true"
     precision: "bf16-mixed"
     max_steps: 500000
     num_sanity_val_steps: 2
@@ -24,9 +24,19 @@ fit:
         save_dir: /mnt/iscsi/outputs/vitdet
 
   model:
-    class_path: vitdet.train.contrastive.ContrastiveEmbedding
+    class_path: deep_helpers.tasks.MultiTask
     init_args:
-      backbone: "vitdet_base_patch16_224"
+      tasks:
+        -
+          - "contrastive"
+          - class_path: vitdet.train.contrastive.ContrastiveEmbedding
+            init_args:
+              backbone: "vitdet_base_patch8_224"
+        -
+          - "mae"
+          - class_path: vitdet.train.mae.MAE
+            init_args:
+              backbone: "vitdet_base_patch8_224"
       optimizer_init:
         class_path: torch.optim.AdamW
         init_args:
@@ -50,5 +60,5 @@ fit:
     class_path: vitdet.train.imagenet.ImagenetDataModule
     init_args:
       data_dir: /mnt/datasets/vision/imagenet/ILSVRC/Data/CLS-LOC
-      batch_size: 16
+      batch_size: 32
       num_workers: 12

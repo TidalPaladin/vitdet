@@ -18,6 +18,7 @@ class ContrastiveEmbedding(ContrastiveEmbeddingBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.save_hyperparameters()
+        torch.set_float32_matmul_precision("medium")
 
     def prepare_backbone(self, name: str) -> nn.Module:
         return MODEL_REGISTRY.get(name).instantiate_with_metadata().fn

@@ -5,6 +5,7 @@ from functools import partial
 from typing import Callable, List, Tuple, Union
 
 import torch.nn as nn
+from einops import rearrange
 from einops.layers.torch import Rearrange
 from torch import Tensor
 from torch.utils.hooks import RemovableHandle
@@ -133,3 +134,15 @@ class ViTDet(nn.Module):
             A handle that can be used to remove the added hook by calling ``handle.remove()``.
         """
         return self.patch_embed.register_forward_hook(func, *args, **kwargs)
+
+    def unpatch(self, x: Tensor) -> Tensor:
+        Hp, Wp = self.patch_size
+        H, W = self.tokenized_size
+        return rearrange(
+            x,
+            "n (h w) (hp wp c) -> n c (h hp) (w wp)",
+            hp=Hp,
+            wp=Wp,
+            h=H,
+            w=W,
+        )
