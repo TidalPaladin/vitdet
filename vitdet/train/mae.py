@@ -37,7 +37,7 @@ class MAE(MAEBase):
         mask_hook = (
             self.backbone.register_mask_hook(partial(mask_fn, mask=mask), prepend=True) if mask is not None else None
         )
-        x = self.backbone(x)
+        x, _ = self.backbone(x)
         x = self.mae_head(x)
         x = cast(Any, self.backbone).unpatch(x)
 

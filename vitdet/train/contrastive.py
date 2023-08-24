@@ -19,6 +19,8 @@ class ContrastiveEmbedding(ContrastiveEmbeddingBase):
         super().__init__(*args, **kwargs)
         self.save_hyperparameters()
         torch.set_float32_matmul_precision("medium")
+        dim = cast(Any, self.backbone).dim
+        self.query = nn.Parameter(torch.randn(1, 1, dim))
 
     def prepare_backbone(self, name: str) -> nn.Module:
         return MODEL_REGISTRY.get(name).instantiate_with_metadata().fn
@@ -31,7 +33,7 @@ class ContrastiveEmbedding(ContrastiveEmbeddingBase):
         r"""Creates the MAE head for the model"""
         dim = cast(Any, self.backbone).dim
         return nn.Sequential(
-            nn.Linear(dim, dim),
+            nn.Linear(dim, dim, bias=False),
             nn.LayerNorm(dim, elementwise_affine=False),
         )
 
@@ -43,11 +45,12 @@ class ContrastiveEmbedding(ContrastiveEmbeddingBase):
         mask_hook = (
             self.backbone.register_mask_hook(partial(mask_fn, mask=mask), prepend=True) if mask is not None else None
         )
-        x = self.backbone(x)
-        x = x.mean(dim=1)
-        x = self.embed_head(x)
+        N = x.shape[0]
+        query = self.query.expand(N, -1, -1)
+        _, cls = self.backbone(x, query)
+        cls = self.embed_head(cls).view(N, -1)
 
         if mask_hook is not None:
             mask_hook.remove()
 
-        return {"embed": x}
+        return {"embed": cls}
