@@ -31,6 +31,7 @@ class TestViTDet:
         assert isinstance(cls, Tensor)
         assert cls.shape == (B, 1, D)
 
+    @pytest.mark.ci_skip
     @pytest.mark.parametrize("key", MODEL_REGISTRY.available_keys())
     def test_instantiate_from_registry(self, key):
         model = MODEL_REGISTRY.get(key).instantiate_with_metadata().fn
