@@ -10,8 +10,10 @@ authors = [
     {name = "Scott Chase Waggener", email = "tidalpaladin@protonmail.com"},
 ]
 dependencies = [
-  "torch>=2.0",
-  "einops>=0.6.1",
+    "torch>=2.0",
+    "einops>=0.6.1",
+    "registry @ git+https://github.com/TidalPaladin/callable-registry.git",
+    "numpy>=1.24.3",
 ]
 readme = "README.md"
 license = {text = "Apache"}
@@ -19,8 +21,11 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 train = [
-  "deep-helpers @ git+https://github.com/TidalPaladin/deep-helpers.git",
-  "ssl-tasks @ git+https://github.com/TidalPaladin/ssl-tasks.git",
+    "deep-helpers @ git+https://github.com/TidalPaladin/deep-helpers.git",
+    "ssl-tasks @ git+https://github.com/TidalPaladin/ssl-tasks.git",
+    "lightning-bolts>=0.6.0.post1",
+    "wandb>=0.15.4",
+    "pytorch-lightning>=2.0",
 ]
 
 [tool.autoflake]
@@ -45,8 +50,6 @@ line_length = 119
 lines_after_imports = 2
 multi_line_output = 3
 use_parentheses = false
-
-[tool.pyright]
 
 [tool.pdm]
 version = { source = "scm" }
@@ -74,5 +77,5 @@ markers = [
 filterwarnings = []
 
 # Sample script config
-#[project.scripts]
-#foo = "project.cli.__main__:main"
+[project.scripts]
+train = "deep_helpers.cli:main"
